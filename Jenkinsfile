@@ -5,9 +5,13 @@ pipeline {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '3', numToKeepStr: '3') //Discard old builds
     }
     stages {
-        stage("Build") {
+        stage("Creating tarball") {
             steps {
-                sh "echo hello"
+                sh """
+                    cd  /var/lib/jenkins/workspace/CI
+                    rm -f *tar.gz
+                    tar -cvf artifacts.tar.gz --exclude=Jenkinsfile *
+                """
             }    
         }
        
