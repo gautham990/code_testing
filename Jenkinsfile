@@ -19,9 +19,8 @@ pipeline {
         }
         stage("Artifact upload") {
             steps {
-                sh """
-                    /usr/local/bin/jfrog rt upload --url http://localhost:8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} artifacts.tar.gz code_testing/
-                """
+                sh  '/usr/local/bin/jfrog rt upload --url http://localhost:8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} artifacts.tar.gz code_testing/'
+
             }
         }
        
