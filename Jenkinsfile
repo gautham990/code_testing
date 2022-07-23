@@ -4,6 +4,9 @@ pipeline {
         timeout(10)     //Restrict the job to 10mins
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '3', numToKeepStr: '3') //Discard old builds
     }
+    environment {
+        ARTIFACTORY_ACCESS_TOKEN = credentials('artifactory-access-token')
+    }
     stages {
         stage("Creating tarball") {
             steps {
@@ -13,6 +16,13 @@ pipeline {
                     tar -cvf artifacts.tar.gz --exclude=Jenkinsfile *
                 """
             }    
+        }
+        stage("Artifact upload") {
+            steps {
+                sh """
+                    jfrog rt upload --url http://localhost:8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} artifacts.tar.gz code_testing/
+                """
+            }
         }
        
     }     
